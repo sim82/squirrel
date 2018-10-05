@@ -11,28 +11,39 @@ set(SQUIRREL_SRC sqapi.cpp
                  sqtable.cpp
                  sqvm.cpp)
 
-if(NOT DISABLE_DYNAMIC)
-  add_library(squirrel SHARED ${SQUIRREL_SRC})
-  if(NOT SQ_DISABLE_INSTALLER)
-    install(TARGETS squirrel RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-                         LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-                         ARCHIVE DESTINATION ${INSTALL_LIB_DIR})
-  endif()
-endif()
+add_library(squirrel ${SQUIRREL_SRC})
 
-if(NOT DISABLE_STATIC)
-  add_library(squirrel_static STATIC ${SQUIRREL_SRC})
-  if(NOT SQ_DISABLE_INSTALLER)
-    install(TARGETS squirrel_static ARCHIVE DESTINATION ${INSTALL_LIB_DIR})
-  endif()
-endif()
 
 if(LONG_OUTPUT_NAMES)
-  if(NOT DISABLE_DYNAMIC)
     set_target_properties(squirrel PROPERTIES OUTPUT_NAME squirrel3)
-  endif()
-
-  if(NOT DISABLE_STATIC)
-    set_target_properties(squirrel_static PROPERTIES OUTPUT_NAME squirrel3_static)
-  endif()
 endif()
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_compile_definitions( squirrel PUBLIC -D_SQ64)
+endif()
+
+
+install(
+    TARGETS
+      squirrel
+      ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+
+target_include_directories(squirrel INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include>
+)
+
+
+set(SQ_PUB_HEADERS ../include/sqconfig.h
+                   ../include/sqstdaux.h
+                   ../include/sqstdblob.h
+                   ../include/sqstdio.h
+                   ../include/sqstdmath.h
+                   ../include/sqstdstring.h
+                   ../include/sqstdsystem.h
+                   ../include/squirrel.h)
+install(FILES ${SQ_PUB_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/squirrel)
+
+#install(FILES ${capnp_headers}  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/squirrel")
