@@ -4,9 +4,13 @@ endif()
 add_executable(sq sq.c)
 set_target_properties(sq PROPERTIES LINKER_LANGUAGE C)
 target_link_libraries(sq squirrel sqstdlib)
-if(NOT SQ_DISABLE_INSTALLER)
-install(TARGETS sq RUNTIME DESTINATION ${INSTALL_BIN_DIR})
-endif()
+
+
+install(TARGETS sq ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+
+#install(FILES sq DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 
 if(LONG_OUTPUT_NAMES)
     set_target_properties(sq PROPERTIES OUTPUT_NAME squirrel3)
