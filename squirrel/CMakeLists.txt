@@ -30,8 +30,8 @@ install(
 )
 
 
-target_include_directories(squirrel INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+target_include_directories(squirrel PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
   $<INSTALL_INTERFACE:include>
 )
 
